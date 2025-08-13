@@ -4,11 +4,11 @@ This is an image processing application written in Java. It provides various fun
 
 ## Features
 
-- **Binary Thresholding**: Converts the image to black and white based on a threshold value.
-- **Multiple Thresholds**: Applies multiple thresholds for enhanced image processing.
-- **Contrast Adjustment**: Adjusts the contrast of the image below a specified threshold.
-- **Color Inversion**: Inverts the colors of the image.
-- **Neighbor Adjustment**: Modifies neighboring pixels of black pixels based on specific conditions.
+- Binary Thresholding: Converts the image to black and white based on a threshold value.
+- Multiple Thresholds: Applies multiple thresholds for enhanced image processing.
+- Contrast Adjustment: Adjusts the contrast of the image below a specified threshold.
+- Color Inversion: Inverts the colors of the image.
+- Neighbor Adjustment: Modifies neighboring pixels of black pixels based on specific conditions.
 
 ## How It Works
 
@@ -32,10 +32,6 @@ The application uses a nested static class `ImageConfig` to configure the proces
 - `multiplier` (default: `0.0`): The multiplier used for contrast adjustment.
 
 ## Methods Overview
-
-### Main Methods
-
-- **`main(String[] args)`**: Entry point of the application. Reads the input image, processes it, and saves the output image.
 
 ### Image Processing
 
