@@ -39,16 +39,52 @@ public class Main {
      * It reads an input image, processes it according to the configuration,
      * and saves the output image.
      *
-     * @param args command line arguments (not used)
+     * @param args command line arguments: [inputFile] [outputFile] [outputFormat]
+     *             If no arguments provided, defaults to "img.png" input and auto-numbered PNG output
      */
     public static void main(String[] args) {
         try {
             ImageConfig config = new ImageConfig();
-            BufferedImage inputImage = read(new File("img.png"));
-
-            saveImage(processImage(inputImage, config));
+            
+            // Determine input file
+            String inputFile = args.length > 0 ? args[0] : "img.png";
+            
+            // Validate input file exists and format is supported
+            File input = new File(inputFile);
+            if (!input.exists()) {
+                System.err.println("Error: Input file '" + inputFile + "' not found.");
+                return;
+            }
+            
+            String inputFormat = getFileExtension(inputFile);
+            if (!isFormatSupported(inputFormat, true)) {
+                System.err.println("Error: Input format '" + inputFormat + "' is not supported.");
+                System.err.println("Supported formats: " + String.join(", ", getSupportedFormats(true)));
+                return;
+            }
+            
+            BufferedImage inputImage = read(input);
+            BufferedImage processedImage = processImage(inputImage, config);
+            
+            // Determine output file and format
+            if (args.length >= 2) {
+                String outputFile = args[1];
+                String outputFormat = args.length >= 3 ? args[2] : getFileExtension(outputFile);
+                
+                if (!isFormatSupported(outputFormat, false)) {
+                    System.err.println("Error: Output format '" + outputFormat + "' is not supported.");
+                    System.err.println("Supported formats: " + String.join(", ", getSupportedFormats(false)));
+                    return;
+                }
+                
+                saveImage(processedImage, outputFile, outputFormat);
+            } else {
+                // Use legacy behavior for backward compatibility
+                saveImage(processedImage);
+            }
         }
         catch (IOException e) {
+            System.err.println("Error processing image: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -241,6 +277,73 @@ public class Main {
      */
     private static boolean isWhitePixel(BufferedImage image, int x, int y) {
         return (image.getRGB(x, y) & 0x00FFFFFF) == 0x00FFFFFF;
+    }
+
+    /**
+     * Extracts the file extension from a filename.
+     *
+     * @param filename the filename to extract extension from
+     * @return the file extension (without the dot) or empty string if none found
+     */
+    private static String getFileExtension(String filename) {
+        int lastDotIndex = filename.lastIndexOf('.');
+        if (lastDotIndex > 0 && lastDotIndex < filename.length() - 1) {
+            return filename.substring(lastDotIndex + 1).toLowerCase();
+        }
+        return "";
+    }
+
+    /**
+     * Checks if a given format is supported for reading or writing.
+     *
+     * @param format the format to check (e.g., "png", "jpg")
+     * @param forReading true to check read support, false for write support
+     * @return true if the format is supported, false otherwise
+     */
+    private static boolean isFormatSupported(String format, boolean forReading) {
+        String[] supportedFormats = forReading ? 
+            javax.imageio.ImageIO.getReaderFormatNames() : 
+            javax.imageio.ImageIO.getWriterFormatNames();
+            
+        for (String supportedFormat : supportedFormats) {
+            if (supportedFormat.equalsIgnoreCase(format)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Gets all supported image formats.
+     *
+     * @param forReading true to get read formats, false for write formats
+     * @return array of supported format names
+     */
+    private static String[] getSupportedFormats(boolean forReading) {
+        return forReading ? 
+            javax.imageio.ImageIO.getReaderFormatNames() : 
+            javax.imageio.ImageIO.getWriterFormatNames();
+    }
+
+    /**
+     * Saves the processed image to a specified file with the given format.
+     * 
+     * @param image the image to save
+     * @param filename the output filename
+     * @param format the output format (e.g., "png", "jpg")
+     * @throws IOException if an error occurs during file writing
+     */
+    private static void saveImage(BufferedImage image, String filename, String format) throws IOException {
+        File outputFile = new File(filename);
+        
+        // Ensure parent directories exist
+        File parentDir = outputFile.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+        
+        write(image, format, outputFile);
+        out.printf("Saved processed image to: %s (format: %s)%n", outputFile.getName(), format.toUpperCase());
     }
 
     /**

@@ -30,3 +30,9 @@ Thumbs.db
 
 # Output images
 output*.png
+
+# Demo and test files
+demo.*
+processed.*
+test.*
+CreateDemo.*
