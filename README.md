@@ -1,6 +1,6 @@
 # Image Processing Toolkit
 
-This is an image processing application written in Java. It provides various functionalities to process and modify images through thresholding, contrast adjustment, and color inversion.
+This is an image processing application written in Java. It provides various functionalities to process and modify images through thresholding, contrast adjustment, and color inversion. The application supports both a command-line interface and a user-friendly Swing GUI.
 
 ## Features
 
@@ -11,10 +11,33 @@ This is an image processing application written in Java. It provides various fun
 - **Neighbor Adjustment**: Modifies neighboring pixels of black pixels based on specific conditions.
 - **Multi-Format Support**: Reads and writes images in various formats including PNG, JPG/JPEG, BMP, GIF, TIFF, and WBMP.
 - **Format Conversion**: Converts between different image formats while processing.
+- **Graphical User Interface**: Interactive Swing GUI with real-time preview and slider controls.
 
 ## Usage
 
-The application supports both command-line arguments and default behavior for backward compatibility.
+The application supports both graphical and command-line interfaces.
+
+### GUI Usage
+
+Launch the graphical interface for interactive image processing:
+
+```bash
+java -cp target/classes Main --gui
+```
+
+**GUI Features:**
+- **File Menu**: Open and save images in various formats
+- **Real-time Preview**: See original and processed images side by side
+- **Interactive Controls**: 
+  - Checkboxes for enabling/disabling effects
+  - Sliders for adjusting threshold values and multiplier with real-time updates
+  - Live value display for all parameters
+- **Status Bar**: Shows current file information and processing status
+
+**GUI Controls:**
+- **Effects Panel**: Toggle binary threshold, neighbor adjustment, multiple thresholds, contrast adjustment, and color inversion
+- **Threshold Settings**: Adjust binary threshold, white threshold, black threshold, contrast threshold, and multiplier using sliders
+- **Image Display**: Scrollable panels showing original and processed images, automatically scaled for optimal viewing
 
 ### Command-Line Usage
 
@@ -29,6 +52,13 @@ java -cp target/classes Main [inputFile] [outputFile] [outputFormat]
 
 ### Examples
 
+**GUI Mode:**
+```bash
+# Launch interactive GUI
+java -cp target/classes Main --gui
+```
+
+**Command-line Mode:**
 ```bash
 # Convert PNG to JPG
 java -cp target/classes Main input.png output.jpg
