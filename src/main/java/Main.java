@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.SwingUtilities;
 
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 import static java.lang.Math.min;
@@ -41,8 +42,24 @@ public class Main {
      *
      * @param args command line arguments: [inputFile] [outputFile] [outputFormat]
      *             If no arguments provided, defaults to "img.png" input and auto-numbered PNG output
+     *             Use "--gui" as first argument to launch the GUI interface
      */
     public static void main(String[] args) {
+        // Check if GUI mode is requested
+        if (args.length > 0 && "--gui".equals(args[0])) {
+            // Launch GUI
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    new ImageProcessingGUI().setVisible(true);
+                } catch (Exception e) {
+                    System.err.println("Error launching GUI: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            });
+            return;
+        }
+        
+        // Original command-line functionality
         try {
             ImageConfig config = new ImageConfig();
             
